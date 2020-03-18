@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useRouteMatch } from 'react-router-dom';
 import MovieCard from './MovieCard';
 
-function Movie({ addToSavedList }) {
+function Movie(props) {
   const [movie, setMovie] = useState(null);
   const match = useRouteMatch();
 
@@ -15,8 +15,27 @@ function Movie({ addToSavedList }) {
   };
 
   const saveMovie = () => {
-    addToSavedList(movie);
+    props.addToSavedList(movie);
   };
+
+  const delMovie = (e) => {
+   
+      e.preventDefault();
+  
+      axios
+        .delete(`http://localhost:5000/api/movies/${movie.id}`)
+        .then(res => {
+          console.log(res);
+          props.updateMovies(res.data);
+          // nice for UX, send them back to list
+          console.log("going to push to new url");
+          props.history.push("/movies");
+          console.log("past push to new url");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+  }
 
   useEffect(() => {
     fetchMovie(match.params.id);
@@ -32,6 +51,12 @@ function Movie({ addToSavedList }) {
 
       <div className='save-button' onClick={saveMovie}>
         Save
+      </div>
+      <div className='update-button' onClick={() => props.history.push(`/update-movie/${movie.id}`)}>
+        Update
+      </div>
+      <div className='delete-button' onClick={delMovie}>
+        Delete
       </div>
     </div>
   );
