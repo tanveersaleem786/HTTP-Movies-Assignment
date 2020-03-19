@@ -23,14 +23,13 @@ function Movie(props) {
       e.preventDefault();
   
       axios
-        .delete(`http://localhost:5000/api/movies/${movie.id}`)
+        .delete(`http://localhost:6000/api/movies/${movie.id}`)
         .then(res => {
           console.log(res);
-          props.updateMovies(props.movies.filter(movie => movie.id !== res.data));
+          //props.updateMovies(res.data);
           // nice for UX, send them back to list
           console.log("going to push to new url");
-          //console.log(props.movies.filter(movie => movie.id !== res.data));
-          props.history.push("/");
+          props.history.push("/movies");
           console.log("past push to new url");
         })
         .catch(err => {
